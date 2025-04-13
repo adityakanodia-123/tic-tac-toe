@@ -29,6 +29,21 @@ class Game:
      def changePlayer(self,player):
         self.player=self.player%2 +1
      
+     def draw(self,row,col):
+          if self.player==1:
+            start_dec=(col*constants.SQ_SIZE+50,row*constants.SQ_SIZE+50)
+            end_des=(col*constants.SQ_SIZE+constants.SQ_SIZE-50,row*constants.SQ_SIZE+constants.SQ_SIZE-50)
+            pygame.draw.line(screen,(0,0,0),start_dec,end_des,10)
+            #line 2
+            start_dec=(col*constants.SQ_SIZE+50,row*constants.SQ_SIZE+constants.SQ_SIZE-50)
+            end_des=(col*constants.SQ_SIZE+constants.SQ_SIZE-50,row*constants.SQ_SIZE+50)
+            pygame.draw.line(screen,(0,0,0),start_dec,end_des,10)
+               
+          elif self.player==2:#circle for 2
+              circle=(col*constants.SQ_SIZE+constants.SQ_SIZE//2,row*constants.SQ_SIZE+constants.SQ_SIZE//2)
+              pygame.draw.circle(screen,(0,0,0),circle,constants.RADIUS,5)
+                  
+     
 def main():
      
      game=Game()
@@ -46,6 +61,7 @@ def main():
                      col=event.pos[0]//constants.SQ_SIZE
                      if(board.empty(row,col)):
                         board.mark(row,col,game.player)
+                        game.draw(row,col)
                         game.changePlayer(game.player)
                         print(board.squares)
                     
