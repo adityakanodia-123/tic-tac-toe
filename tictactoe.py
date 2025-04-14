@@ -2,6 +2,7 @@ import sys
 import pygame
 import  constants
 import numpy as np
+import random
 pygame.init()
 screen=pygame.display.set_mode((constants.WIDTH,constants.HEIGHT))
 
@@ -36,18 +37,34 @@ class Board:
           for i in range(3):
                for j in range(3):
                     if(self.squares[i][j]==0):
-                         empty.push((i,j))
+                         empty.append((i,j))
           return empty
                
      def isFull(self):
       return self.markedSq==9
           
-     
-   
+class AI:
+     def __init__(self):
+          self.level=0
+          self.player=2
+     def getrand(self,mainboard):
+          empty=mainboard.emptySquares()
+          if(empty!=[]):
+           idx=random.randrange(0,len(empty))
+           return empty[idx]
+     def ai(self,board):
+          if self.level==0:
+               row,col=self.getrand(board)
+               return row,col
+          else:
+               pass
+               
+          
 class Game:
      def __init__(self):
         self.show_line()  
         self.board=Board()
+        self.ai=AI()
         self.player=1
      def show_line(self):
           pygame.draw.line(screen,(0,0,0),(constants.SQ_SIZE,0),(constants.SQ_SIZE,constants.HEIGHT ),4)
@@ -78,6 +95,7 @@ def main():
      
      game=Game()
      board=game.board
+     ai=game.ai
      while True:
           
 
@@ -94,7 +112,12 @@ def main():
                         game.draw(row,col)
                         game.changePlayer(game.player)
                         print(board.squares)
-                    
+                     if game.player==ai.player:
+                           pygame.display.update() 
+                           row,col=ai.ai(board)
+                           board.mark(row,col,game.player)
+                           game.draw(row,col)
+                           game.changePlayer(game.player)
 
          pygame.display.update()             
 main()                    
