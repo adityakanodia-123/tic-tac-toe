@@ -97,10 +97,11 @@ class AI:
                return row,col
           else:
          # minmax()
-           _,move=self.minmax(board,False)
+           eval,move=self.minmax(board,False)
            row, col = move
+           print(f'the ai has chosen you will  {eval}')
            return row,col
-            
+          
                
                
           
