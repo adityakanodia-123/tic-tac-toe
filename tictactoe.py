@@ -3,6 +3,7 @@ import pygame
 import  constants
 import numpy as np
 import random
+import copy
 pygame.init()
 screen=pygame.display.set_mode((constants.WIDTH,constants.HEIGHT))
 
@@ -45,19 +46,62 @@ class Board:
           
 class AI:
      def __init__(self):
-          self.level=0
+          self.level=1
           self.player=2
      def getrand(self,mainboard):
           empty=mainboard.emptySquares()
           if(empty!=[]):
            idx=random.randrange(0,len(empty))
            return empty[idx]
+     def minmax(self,mainboard,maximising):
+           case=mainboard.checkWin()
+           if case==1:
+                return 1,None
+           elif case==2:
+                return -1,None
+           else:
+                if mainboard.isFull():
+                     return 0,None
+           if maximising:
+               max_eval=-3
+               best_move=None
+               empty=mainboard.emptySquares()
+               for(row,col) in empty:
+                    temp=copy.deepcopy(mainboard)
+                    temp.mark(row,col,1)
+                    eval=self.minmax(temp,False)[0]
+                    if(eval>max_eval):
+                         max_eval=eval
+                         best_move=(row,col)
+               
+               return max_eval, best_move
+           else:
+               min_eval=3
+               best_move=None
+               empty=mainboard.emptySquares()
+               for(row,col) in empty:
+                    temp=copy.deepcopy(mainboard)
+                    temp.mark(row,col,self.player)
+                    eval=self.minmax(temp,True)[0]
+                    if(eval<min_eval):
+                         min_eval=eval
+                         best_move=(row,col)
+               
+               return min_eval, best_move
+               
+               
+           
      def ai(self,board):
           if self.level==0:
                row,col=self.getrand(board)
                return row,col
           else:
-               pass
+         # minmax()
+           _,move=self.minmax(board,False)
+           row, col = move
+           return row,col
+            
+               
                
           
 class Game:
